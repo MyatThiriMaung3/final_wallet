@@ -2,11 +2,20 @@ package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
 
 import static android.content.ContentValues.TAG;
 
+import android.Manifest;
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -34,11 +44,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
+    private static final int STORAGE_PERMISSION_CODE = 100;
     private DrawerLayout drawerLayout;
     private NavigationView navigationViewHome;
     private ImageView imgSettings;
@@ -59,6 +74,14 @@ public class HomeActivity extends AppCompatActivity {
         reference = FirebaseDatabase.getInstance().getReference("User");
 
         createNotificationChannel();
+        scheduleDailyReport();
+
+        // Check and request storage permissions
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if (!isStoragePermissionGranted()) {
+                requestStoragePermission();
+            }
+        }
 
         reference.child(name).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -139,6 +162,29 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void scheduleDailyReport() {
+        // Set the alarm time to 10 PM
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 23); // 11 PM
+        calendar.set(Calendar.MINUTE, 00);
+        calendar.set(Calendar.SECOND, 00);
+
+        // Create the alarm intent
+        Intent intent = new Intent(this, DailyReportReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Schedule the alarm
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY,
+                    pendingIntent);
+        }
     }
 
     private void createNotificationChannel() {
@@ -287,6 +333,89 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void exportCSV(View view) {
+        exportToCsv(this);
+    }
 
+    private boolean isStoragePermissionGranted() {
+        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestStoragePermission() {
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                STORAGE_PERMISSION_CODE
+        );
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void exportToCsv(Context context) {
+        String[] data = {"This", "is", "the", "list", "of", "empty", "transactions"};
+        String fileName = "transactions_" + name + ".csv";
+
+        OutputStream outputStream = null;
+        try {
+            Uri fileUri;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // For Android 10 (API 29) and above
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+                values.put(MediaStore.MediaColumns.MIME_TYPE, "text/csv");
+                values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+
+                // Insert the file into MediaStore
+                fileUri = context.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+            } else {
+                // For Android 9 and below
+                File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                File csvFile = new File(downloadsDirectory, fileName);
+                fileUri = Uri.fromFile(csvFile);
+            }
+
+            if (fileUri != null) {
+                // Open the output stream for writing
+                outputStream = context.getContentResolver().openOutputStream(fileUri);
+
+                // Write data to the CSV
+                StringBuilder csvContent = new StringBuilder();
+                csvContent.append("Index, Value\n"); // Optional header
+                for (int i = 0; i < data.length; i++) {
+                    csvContent.append(i + 1).append(", ").append(data[i]).append("\n");
+                }
+
+                if (outputStream != null) {
+                    outputStream.write(csvContent.toString().getBytes());
+                    outputStream.flush();
+                }
+
+                Toast.makeText(context, "CSV exported successfully to Downloads.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, "Failed to create CSV file.", Toast.LENGTH_LONG).show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error exporting CSV: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } finally {
+            // Close the stream
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

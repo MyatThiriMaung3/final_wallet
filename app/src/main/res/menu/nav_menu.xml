@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view"
+    android:layout_gravity="start"
+
+    >
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/baseline_home_24"
+            android:title="Home"
+            />
+        <item
+            android:id="@+id/nav_infor"
+            android:icon="@drawable/baseline_account_box_24"
+            android:title="Account"
+            />
+
+        <item
+            android:id="@+id/nav_cal"
+            android:icon="@drawable/baseline_calculate_24"
+            android:title="Calculator"
+            />
+        <item
+            android:id="@+id/nav_news"
+            android:icon="@drawable/baseline_newspaper_24"
+            android:title="News"/>
+
+        <item
+            android:id="@+id/nav_debts"
+            android:icon="@drawable/baseline_attach_money_24"
+            android:title="Debts"/>
+
+        <item
+            android:id="@+id/nav_theme"
+            android:icon="@drawable/baseline_invert_colors_24"
+            android:title="Theme"
+            />
+
+        <item
+            android:id="@+id/nav_language"
+            android:icon="@drawable/baseline_translate_24"
+            android:title="Language"
+            />
+
+        <item
+            android:id="@+id/nav_font_size"
+            android:icon="@drawable/baseline_format_size_24"
+            android:title="Font size"
+            />
+
+        <item
+            android:id="@+id/nav_updates"
+            android:icon="@drawable/baseline_system_update_24"
+            android:title="Updates"
+            />
+
+    </group>
+</menu>

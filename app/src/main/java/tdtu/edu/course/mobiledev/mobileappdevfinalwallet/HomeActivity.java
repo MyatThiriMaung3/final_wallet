@@ -2,18 +2,26 @@ package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -25,6 +33,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
@@ -45,6 +57,8 @@ public class HomeActivity extends AppCompatActivity {
         name = intentFromLogin.getStringExtra("name");
 
         reference = FirebaseDatabase.getInstance().getReference("User");
+
+        createNotificationChannel();
 
         reference.child(name).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -127,6 +141,54 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    private void createNotificationChannel() {
+        String channelId = "transaction_notifications";
+        CharSequence channelName = "Transaction Notifications";
+        String channelDescription = "Notifications for successful transactions";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+        channel.setDescription(channelDescription);
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void showNotification(String category, String amount, boolean isIncome) {
+        String temp;
+        if (isIncome) {
+            temp = "INCOME, ";
+        } else {
+            temp = "EXPENSE. ";
+        }
+        String channelId = "transaction_notifications";
+        int notificationId = (int) System.currentTimeMillis();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.tdt_logo)
+                .setContentTitle("Transaction Saved")
+                .setContentText(temp + "Category: " + category + ", Amount: " + amount)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        // Show the notification
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        notificationManager.notify(notificationId, builder.build());
+    }
+
     private void logout() {
         Intent intentLogout = new Intent(this, LoginActivity.class);
         startActivity(intentLogout);
@@ -189,5 +251,42 @@ public class HomeActivity extends AppCompatActivity {
 
     public void analysis(View view) {
         switchToAnalysis();
+    }
+
+    public void topUp(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Top Up");
+        final EditText input = new EditText(this);
+        builder.setView(input);
+
+        builder.setPositiveButton("Top Up", (dialog, which) -> {
+            String addBalance = input.getText().toString().trim();
+            if (!addBalance.isEmpty()) {
+                double newBalance = balance + Double.parseDouble(addBalance);
+                reference.child(name).child("balance").setValue(newBalance);
+                balance = newBalance;
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String formattedDate = dateFormat.format(new Date());
+
+                Transaction transaction = new Transaction("Bank", "Top Up", addBalance, "From Top Up", formattedDate, true);
+                String transactionId = reference.push().getKey();
+                reference.child(name).child("transactions").child(Objects.requireNonNull(transactionId)).setValue(transaction).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(HomeActivity.this, "Transaction from TopUp saved!", Toast.LENGTH_SHORT).show();
+                        showNotification("Top Up", addBalance, true);
+                    } else {
+                        Toast.makeText(HomeActivity.this, "Failed to save transaction", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.show();
+    }
+
+    public void exportCSV(View view) {
+
     }
 }

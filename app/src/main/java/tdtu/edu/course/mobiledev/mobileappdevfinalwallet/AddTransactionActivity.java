@@ -3,7 +3,10 @@ package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
 import static android.content.ContentValues.TAG;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +22,9 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -56,6 +62,8 @@ public class AddTransactionActivity extends AppCompatActivity {
         name = intentFromHome.getStringExtra("name");
 
         reference = FirebaseDatabase.getInstance().getReference("User").child(name);
+
+        createNotificationChannel();
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -143,6 +151,16 @@ public class AddTransactionActivity extends AppCompatActivity {
             }
         });
 
+        // Initialize the current date as the default date
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Format the current date
+        selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%d", day, month + 1, year);
+        chooseDayButton.setText(selectedDate);
+
         // Date picker
         chooseDayButton.setOnClickListener(v -> showDatePickerDialog());
 
@@ -182,6 +200,7 @@ public class AddTransactionActivity extends AppCompatActivity {
 
                             reference.child("balance").setValue(balance);
                             Toast.makeText(AddTransactionActivity.this, "Transaction saved!", Toast.LENGTH_SHORT).show();
+                            showNotification(selectedCategory, amount, isIncome);
                         } else {
                             Toast.makeText(AddTransactionActivity.this, "Failed to save transaction", Toast.LENGTH_SHORT).show();
                         }
@@ -192,6 +211,55 @@ public class AddTransactionActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void createNotificationChannel() {
+        String channelId = "transaction_notifications";
+        CharSequence channelName = "Transaction Notifications";
+        String channelDescription = "Notifications for successful transactions";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+        channel.setDescription(channelDescription);
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void showNotification(String category, String amount, boolean isIncome) {
+        String temp;
+        if (isIncome) {
+            temp = "INCOME, ";
+        } else {
+            temp = "EXPENSE. ";
+        }
+        String channelId = "transaction_notifications";
+        int notificationId = (int) System.currentTimeMillis();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.tdt_logo)
+                .setContentTitle("Transaction Saved")
+                .setContentText(temp + "Category: " + category + ", Amount: " + amount)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        // Show the notification
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        notificationManager.notify(notificationId, builder.build());
+    }
+
 
     private void showAddAccountDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -210,6 +278,8 @@ public class AddTransactionActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
     }
+
+
 
     private void showAddCategoryDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

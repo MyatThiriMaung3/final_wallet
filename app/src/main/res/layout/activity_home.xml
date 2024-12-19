@@ -197,6 +197,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:onClick="topUp"
                     >
 
                     <ImageView
@@ -374,6 +375,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:onClick="exportCSV"
                     >
 
                     <ImageView

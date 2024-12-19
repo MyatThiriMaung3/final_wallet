@@ -30,12 +30,13 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_back"
                 android:contentDescription="@string/back_icon"
-                android:padding="8dp"/>
+                android:padding="8dp"
+                android:onClick="backHome"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/add_transaction"
+                android:text="News"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:layout_marginStart="8dp"/>

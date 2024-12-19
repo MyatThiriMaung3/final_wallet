@@ -1,8 +1,10 @@
 package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -28,12 +30,16 @@ public class NewsActivity extends AppCompatActivity {
     private static final String API_KEY = "e5a3545260d34caaa6aa6c4430892a52"; // Your API key
     private RecyclerView recyclerView;
     private NewsAdapter newsAdapter;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_news);
+
+        Intent intentFromHome = getIntent();
+        name = intentFromHome.getStringExtra("name");
 
         // Toolbar setup
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.news_toolbar);
@@ -104,5 +110,12 @@ public class NewsActivity extends AppCompatActivity {
         });
 
         return true;
+    }
+
+    public void backHome(View view) {
+        Intent intentHome = new Intent(this, HomeActivity.class);
+        intentHome.putExtra("name", name);
+        startActivity(intentHome);
+        finish();
     }
 }

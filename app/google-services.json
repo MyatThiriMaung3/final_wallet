@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "997282293123",
+    "firebase_url": "https://androiddevfinalwallet-default-rtdb.firebaseio.com",
+    "project_id": "androiddevfinalwallet",
+    "storage_bucket": "androiddevfinalwallet.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997282293123:android:fc25383662537b766bc2b6",
+        "android_client_info": {
+          "package_name": "tdtu.edu.course.mobiledev.finalwallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAVhHSOahdx7wrA1whddxXMedReGHK0Kk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997282293123:android:6dc41b3a29a5f7bd6bc2b6",
+        "android_client_info": {
+          "package_name": "tdtu.edu.course.mobiledev.mobileappdevfinalwallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAVhHSOahdx7wrA1whddxXMedReGHK0Kk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

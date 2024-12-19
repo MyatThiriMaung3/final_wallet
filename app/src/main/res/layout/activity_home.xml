@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/darkPurple"
-    android:paddingTop="60dp"
+    android:paddingTop="30dp"
     android:paddingBottom="130dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
@@ -29,6 +29,7 @@
             />
 
         <TextView
+            android:id="@+id/txtName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="User Name"
@@ -94,6 +95,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/txtBalance"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:text="***** VND"
@@ -112,6 +114,7 @@
                     android:layout_weight="1"
                     android:textStyle="bold"
                     android:gravity="center_vertical"
+                    android:onClick="seeBalance"
                     />
 
             </LinearLayout>
@@ -241,6 +244,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_gravity="center"
+                android:onClick="swtichToTransactionHistory"
                 >
 
                 <ImageView
@@ -334,6 +338,7 @@
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_gravity="center"
+                android:onClick="switchToAnalysis"
                 >
 
                 <ImageView

@@ -1,6 +1,8 @@
 package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,5 +18,17 @@ public class AccountDetailsActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_account_details);
 
+    }
+
+    public void seeBalance(View view) {
+    }
+
+    public void logout(View view) {
+        Intent intentLogout = new Intent(this, LoginActivity.class);
+        startActivity(intentLogout);
+        finish();
+    }
+
+    public void viewPassword(View view) {
     }
 }

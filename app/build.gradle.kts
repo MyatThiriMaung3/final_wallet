@@ -40,7 +40,19 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // for circle image view
     implementation ("de.hdodenhof:circleimageview:3.1.0")
+    
+    // for animation of splash screen
     implementation("com.daimajia.androidanimations:library:2.4@aar")
+
+    // Thư viện Retrofit và Gson
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Thư viện Glide cho Java
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1") // Dùng annotationProcessor
 
 }

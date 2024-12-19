@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#19173D">
+
+
+    <TextView
+        android:id="@+id/txtTotalSpending"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="5,000,000 VND"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:layout_marginTop="30dp"
+        android:layout_weight="2"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Total spending for the whole month"
+        android:textColor="#EEEEEE"
+        android:textSize="12sp"
+        android:layout_weight="1"
+        />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pcSpecificAnalysis"
+        android:layout_width="350dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="center"
+        android:background="@drawable/analysis_background"
+        android:layout_weight="12"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Create New Transfer +"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="2"
+        />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnTransfer"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="30dp"
+        android:text="Quick Transfer"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:padding="30dp"
+        android:background="@drawable/button_background"
+        android:layout_weight="5"
+        android:onClick="switchAddTransactionActivity"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="bottom"
+        android:paddingBottom="10dp"
+        android:layout_weight="8">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Summary"
+            android:textColor="#00D7FF"
+            android:textSize="14sp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            />
+
+        <TextView
+            android:id="@+id/txtSummarySpecific"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is the paragraph for the summary. Summary will tell the user, in which week, the expense is highest and in which week the income is highest."
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textColor="#00D7FF"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -6,6 +6,135 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/darkPurple"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="60dp"
     tools:context=".AnalysisActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="40dp"
+        android:paddingStart="15dp"
+        >
+
+        <ImageView
+            android:id="@+id/back_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back_icon"
+            android:padding="8dp"
+            android:onClick="backHome"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Analysis"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:orientation="horizontal"
+        android:background="@drawable/textview_default_background">
+
+        <TextView
+            android:id="@+id/txtStandard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Standard"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:background="@drawable/textview_background_selector"
+            />
+
+        <TextView
+            android:id="@+id/txtExpenseSpecific"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Specific"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:background="@drawable/textview_background_selector"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Monthly Analysis"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_weight="2"
+            android:layout_gravity="center_vertical"
+            />
+
+        <Spinner
+            android:id="@+id/spinnerMonth"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_background"
+            android:layout_gravity="center"
+            />
+
+        <Spinner
+            android:id="@+id/spinnerYear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/button_background"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/lilo_specific_analysis"
+        layout="@layout/specific_analysis"
+        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_weight="40"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        />
+
+    <include
+        android:id="@+id/lilo_standard_analysis"
+        layout="@layout/standard_analysis"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="40"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        />
 
 </LinearLayout>

@@ -1,7 +1,10 @@
 package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,8 +20,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class HomeActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
@@ -26,7 +32,8 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView imgSettings;
     private TextView txtName;
     private TextView txtBalance;
-    private String name;
+    private String name = "";
+    private double balance = -1;
     private DatabaseReference reference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +41,28 @@ public class HomeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
-        reference = FirebaseDatabase.getInstance().getReference("User");
-
         Intent intentFromLogin = getIntent();
         name = intentFromLogin.getStringExtra("name");
+
+        reference = FirebaseDatabase.getInstance().getReference("User");
+
+        reference.child(name).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Double tempBalance = snapshot.child("balance").getValue(Double.class);
+                    if (tempBalance != null) {
+                        balance = tempBalance;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
 
         drawerLayout = findViewById(R.id.main);
         navigationViewHome = findViewById(R.id.navigationViewHome);
@@ -91,12 +116,21 @@ public class HomeActivity extends AppCompatActivity {
                     case "Updates":
                         Toast.makeText(HomeActivity.this, "Updates clicked", Toast.LENGTH_SHORT).show();
                         break;
+                    case "Logout":
+                        logout();
+                        break;
                 }
 
                 return true;
             }
         });
 
+    }
+
+    private void logout() {
+        Intent intentLogout = new Intent(this, LoginActivity.class);
+        startActivity(intentLogout);
+        finish();
     }
 
     public void switchToNews() {
@@ -130,6 +164,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void seeBalance(View view) {
+        if (txtBalance.getText().toString().equals("***** VND")) {
+            txtBalance.setText(balance + " VND");
+        } else {
+            txtBalance.setText("***** VND");
+        }
     }
 
     public void switchToTransactionHistory() {

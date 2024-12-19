@@ -43,6 +43,9 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    // for charts visuals
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     // for circle image view
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     

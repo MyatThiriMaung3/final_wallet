@@ -1,13 +1,18 @@
 package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
@@ -16,10 +21,18 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class TransactionHistoryActivity extends AppCompatActivity {
+    private TextView txtAvailableBalance;
+    private TextView txtName;
     private RecyclerView rvTransaction;
     private SearchView svTransaction;
     private Spinner spinnerSearches;
@@ -27,7 +40,9 @@ public class TransactionHistoryActivity extends AppCompatActivity {
     private ArrayList<String> searches;
     private int searchPosition;
     private TransactionAdapter adapter;
-    private String name;
+    private String name = "";
+    private double balance = -1;
+    private DatabaseReference reference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +52,34 @@ public class TransactionHistoryActivity extends AppCompatActivity {
         Intent intentFromHome = getIntent();
         name = intentFromHome.getStringExtra("name");
 
+        txtAvailableBalance = findViewById(R.id.txtAvailableBalance);
+        txtName = findViewById(R.id.txtName);
         rvTransaction = findViewById(R.id.rvTransaction);
         svTransaction = findViewById(R.id.svTransaction);
         spinnerSearches = findViewById(R.id.spinnerSearches);
 
-        transactions = loadData();
+        reference = FirebaseDatabase.getInstance().getReference("User").child(name);
+
+        txtName.setText(name);
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Double tempBalance = snapshot.child("balance").getValue(Double.class);
+                    if (tempBalance != null) {
+                        balance = tempBalance;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        loadData();
         loadSearches();
 
         adapter = new TransactionAdapter(transactions, searchPosition);
@@ -98,80 +136,34 @@ public class TransactionHistoryActivity extends AppCompatActivity {
         searches.add("date");
     }
 
-//    private LinkedList<Transaction> loadData() {
-//        transactions = new LinkedList<>();
-//
-//        // Get the Firebase Database reference
-//        DatabaseReference transactionsRef = FirebaseDatabase.getInstance().getReference("transactions");
-//
-//        // Add a listener to read data from Firebase
-//        transactionsRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                transactions.clear();  // Clear the current list to avoid duplication
-//
-//                // Iterate through the transactions in the database
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Transaction transaction = snapshot.getValue(Transaction.class);
-//                    transactions.add(transaction);
-//                }
-//
-//                // Notify the adapter of data changes to update the RecyclerView
-//                adapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Toast.makeText(TransactionHistoryActivity.this, "Failed to load transactions.", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        return transactions;
-//    }
-
-    private LinkedList<Transaction> loadData() {
+    private void loadData() {
         transactions = new LinkedList<>();
 
-        for (int i = 1; i <= 50; i++) {
-            if (i > 9 && i <= 31) {
-                if (i % 2 == 0) {
-                    transactions.add(new Transaction("admin", "Transport", "" + (i * 100000), "Blah Blah", i + "/07/2024", true));
-                } else {
-                    transactions.add(new Transaction("admin", "Shopping", "" + (i * 30000), "This is the note for the testing. Ha Ha.", i + "/07/2024", false));
+        reference.child("transactions").orderByChild("date").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                transactions.clear();
+
+                for (DataSnapshot transactionSnapshot : snapshot.getChildren()) {
+                    Transaction transaction = transactionSnapshot.getValue(Transaction.class);
+
+                    if (transaction != null) {
+                        transactions.addFirst(transaction);
+                    }
                 }
-            } else {
-                transactions.add(new Transaction("admin", "Food", "" + (i * 10000 ), "Nothing to say", "07/09/2024", false));
+
+                // Notify the adapter that the data has changed
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
             }
 
-        }
-
-        for (int i = 1; i <= 50; i++) {
-            if (i > 9 && i <= 31) {
-                if (i % 2 == 0) {
-                    transactions.add(new Transaction("admin", "Transport", "" + (i * 30000), "Blah Blah", i + "/09/2024", false));
-                } else {
-                    transactions.add(new Transaction("admin", "Shopping", "" + (i * 7000), "This is the note for the testing. Ha Ha.", i + "/08/2024", false));
-                }
-            } else {
-                transactions.add(new Transaction("admin", "Others", "" + (i * 10000 ), "Nothing to say", "17/09/2024", false));
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Log or display the error
+                Log.e(TAG, "Failed to load transactions", error.toException());
             }
-
-        }
-
-        for (int i = 1; i <= 50; i++) {
-            if (i > 9 && i <= 30) {
-                if (i % 3 == 0) {
-                    transactions.add(new Transaction("admin", "Transport", "" + (i * 30000), "Blah Blah", i + "/07/2024", false));
-                } else {
-                    transactions.add(new Transaction("admin", "Food", "" + (i * 30000), "This is the note for the testing. Ha Ha.", i + "/07/2024", false));
-                }
-            } else {
-                transactions.add(new Transaction("admin", "Shopping", "" + (i * 20000 ), "Nothing to say", "03/09/2024", true));
-            }
-
-        }
-
-        return transactions;
+        });
     }
 
     public void switchAnalysisActivity(View view) {
@@ -184,5 +176,13 @@ public class TransactionHistoryActivity extends AppCompatActivity {
         intentHome.putExtra("name", name);
         startActivity(intentHome);
         finish();
+    }
+
+    public void seeBalance(View view) {
+        if (txtAvailableBalance.getText().toString().equals("***** VND")) {
+            txtAvailableBalance.setText(balance + " VND");
+        } else {
+            txtAvailableBalance.setText("***** VND");
+        }
     }
 }

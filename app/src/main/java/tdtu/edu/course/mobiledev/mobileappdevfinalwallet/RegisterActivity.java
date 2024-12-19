@@ -20,6 +20,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+
 public class RegisterActivity extends AppCompatActivity {
     private EditText edt_registerName;
     private EditText edt_registerPhone;
@@ -64,16 +66,23 @@ public class RegisterActivity extends AppCompatActivity {
                 User user = new User(name, phone, password, 0);
                 reference.child(name).setValue(user).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(RegisterActivity.this, "You have signed up successfully", Toast.LENGTH_LONG).show();
+                        reference.child(name).child("transactions").setValue(new HashMap<>()).addOnCompleteListener(transactionTask -> {
+                            if (transactionTask.isSuccessful()) {
+                                Toast.makeText(RegisterActivity.this, "You have signed up successfully", Toast.LENGTH_LONG).show();
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intentLogin = new Intent(RegisterActivity.this, LoginActivity.class);
-                                startActivity(intentLogin);
-                                finish();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intentLogin = new Intent(RegisterActivity.this, LoginActivity.class);
+                                        startActivity(intentLogin);
+                                        finish();
+                                    }
+                                }, 1000);
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Failed to initialize transactions node", Toast.LENGTH_LONG).show();
+                                Log.e(TAG, "Failed to create transactions node", transactionTask.getException());
                             }
-                        }, 1000);
+                        });
 
                     } else {
                         Toast.makeText(RegisterActivity.this, "Registration failed", Toast.LENGTH_LONG).show();

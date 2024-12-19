@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#19173D">
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/bcMonthlyAnalysis"
+        android:layout_width="350dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="center"
+        android:background="@drawable/analysis_background"
+        android:layout_weight="16"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Balance Calculation"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="2"
+        />
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="10"
+        android:paddingTop="25dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="5dp"
+        android:layout_gravity="center"
+        android:background="@drawable/analysis_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Total Expenses"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/txtTotalExpenses"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="500,000 VND"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="end"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Total Income"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/txtTotalIncome"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="1,500,000 VND"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="end"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="............................................."
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Current Balance"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/txtCurrentBalance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="***** VND"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="end"
+                android:layout_weight="1"
+                android:onClick="seeBalance"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="bottom"
+        android:paddingBottom="10dp"
+        android:layout_weight="10">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Summary"
+            android:textColor="#00D7FF"
+            android:textSize="14sp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            />
+
+        <TextView
+            android:id="@+id/txtSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is the paragraph for the summary. Summary will tell the user, in which week, the expense is highest and in which week the income is highest."
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textColor="#00D7FF"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

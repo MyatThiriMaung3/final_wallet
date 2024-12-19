@@ -66,6 +66,8 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         intent.putExtra("name", name);
                         startActivity(intent);
+                        finish();
+
                     }else{
                         edt_loginPassword.setError("Invalid");
                         edt_loginPassword.requestFocus();

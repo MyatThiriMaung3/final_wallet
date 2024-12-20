@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -53,6 +54,7 @@ import java.util.Date;
 import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
+    private LowBatteryReceiver lowBatteryReceiver;
     private static final int STORAGE_PERMISSION_CODE = 100;
     private DrawerLayout drawerLayout;
     private NavigationView navigationViewHome;
@@ -72,6 +74,11 @@ public class HomeActivity extends AppCompatActivity {
         name = intentFromLogin.getStringExtra("name");
 
         reference = FirebaseDatabase.getInstance().getReference("User");
+
+        // Register the LowBatteryReceiver dynamically
+        lowBatteryReceiver = new LowBatteryReceiver();
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_LOW);
+        registerReceiver(lowBatteryReceiver, filter);
 
         createNotificationChannel();
         scheduleDailyReport();
@@ -239,6 +246,14 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         notificationManager.notify(notificationId, builder.build());
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        // Unregister the receiver to avoid memory leaks
+        if (lowBatteryReceiver != null) {
+            unregisterReceiver(lowBatteryReceiver);
+        }
     }
 
     private void logout() {

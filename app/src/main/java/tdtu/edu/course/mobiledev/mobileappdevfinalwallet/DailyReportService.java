@@ -30,13 +30,11 @@ public class DailyReportService extends Service {
 
     private void showNotification(double income, double expense) {
         // Create the notification channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID, "Daily Report", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            if (manager != null) {
-                manager.createNotificationChannel(channel);
-            }
+        NotificationChannel channel = new NotificationChannel(
+                CHANNEL_ID, "Daily Report", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        if (manager != null) {
+            manager.createNotificationChannel(channel);
         }
 
         // Build the notification
@@ -54,12 +52,10 @@ public class DailyReportService extends Service {
     }
 
     private double getTodayIncome() {
-        // TODO: Query the database and calculate today's total income
         return 150.0; // Example value
     }
 
     private double getTodayExpense() {
-        // TODO: Query the database and calculate today's total expense
         return 75.0; // Example value
     }
 

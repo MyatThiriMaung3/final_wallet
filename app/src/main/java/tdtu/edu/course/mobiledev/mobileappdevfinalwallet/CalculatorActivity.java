@@ -90,9 +90,20 @@ public class CalculatorActivity extends AppCompatActivity {
         opers.add(NumPlus);
         opers.add(NumMinus);
         for (Button b : opers){
+//            b.setOnClickListener(view -> {
+//                firstnum = Double.parseDouble(Screen.getText().toString());
+//                operation = b.getText().toString();
+//                Screen.setText("0");
+//            });
+
             b.setOnClickListener(view -> {
                 firstnum = Double.parseDouble(Screen.getText().toString());
-                operation = b.getText().toString();
+                // Map "X" to "*"
+                if (b.getText().toString().equals("X")) {
+                    operation = "*";
+                } else {
+                    operation = b.getText().toString();
+                }
                 Screen.setText("0");
             });
         }

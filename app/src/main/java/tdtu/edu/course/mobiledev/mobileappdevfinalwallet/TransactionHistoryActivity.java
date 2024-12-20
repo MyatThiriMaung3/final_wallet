@@ -168,7 +168,9 @@ public class TransactionHistoryActivity extends AppCompatActivity {
 
     public void switchAnalysisActivity(View view) {
         Intent intentAnalysis = new Intent(this, AnalysisActivity.class);
+        intentAnalysis.putExtra("name", name);
         startActivity(intentAnalysis);
+        finish();
     }
 
     public void backHome(View view) {

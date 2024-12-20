@@ -8,7 +8,8 @@
     android:orientation="vertical"
     android:background="@color/darkPurple"
     android:paddingBottom="60dp"
-    tools:context=".TransactionHistoryActivity">
+    tools:context=".TransactionHistoryActivity"
+    android:focusableInTouchMode="true">
 
     <LinearLayout
         android:layout_width="match_parent"

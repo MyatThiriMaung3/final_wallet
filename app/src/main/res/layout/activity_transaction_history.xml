@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Transaction History"
+            android:text="@string/transaction_history"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:layout_marginStart="8dp"/>
@@ -51,7 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Username"
+            android:text="@string/username3"
             android:textColor="@color/white"
             android:textSize="16sp"
             />
@@ -81,7 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Available Balance"
+            android:text="@string/available_balance"
             android:textColor="@color/white"
             android:textSize="16sp"
             />
@@ -90,7 +90,7 @@
             android:id="@+id/txtAvailableBalance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="***** VND"
+            android:text="@string/vnd"
             android:textSize="16sp"
             android:textColor="@color/white"
             android:layout_weight="1"
@@ -115,7 +115,7 @@
             android:id="@+id/svTransaction"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:queryHint="Search by Categories"
+            app:queryHint="@string/search_by_categories"
             app:iconifiedByDefault="false"
             android:layout_gravity="center"
             android:background="@drawable/search_background"
@@ -139,7 +139,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:text="Recent"
+        android:text="@string/recent"
         android:textSize="16sp"
         android:textColor="#19173D"
         android:background="#8D9EEA"
@@ -162,7 +162,7 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:layout_gravity="center"
-        android:text="Analysis"
+        android:text="@string/analysis"
         android:textSize="16sp"
         android:textColor="#19173D"
         android:backgroundTint="@null"

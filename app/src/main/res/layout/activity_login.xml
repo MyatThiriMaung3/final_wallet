@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="10dp"
-            android:text="Login"
+            android:text="@string/login"
             android:textColor="@color/wheatWhite"
             android:textAlignment="center"
             android:textSize="36sp"
@@ -48,7 +48,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Username"
+                    android:text="@string/username"
                     android:textSize="20sp"
                     android:textColor="@color/wheatWhite" />
 
@@ -65,7 +65,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Password"
+                    android:text="@string/password"
                     android:layout_marginTop="50dp"
                     android:textSize="20sp"
                     android:textColor="@color/wheatWhite" />
@@ -84,7 +84,7 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:text="Login"
+                    android:text="@string/login2"
                     android:id="@+id/btn_login"
                     android:background="@drawable/button_background"
                     android:layout_marginTop="100dp"
@@ -94,11 +94,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Don't have account ? Sign up"
+                    android:text="@string/don_t_have_account_sign_up"
                     android:layout_gravity="center"
                     android:padding="8dp"
                     android:layout_marginTop="20dp"
-                    android:textSize="18dp"
+                    android:textSize="18sp"
                     android:textColor="@color/wheatWhite"
                     android:onClick="switchToRegister"
                     />

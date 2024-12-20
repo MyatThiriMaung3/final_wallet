@@ -75,7 +75,7 @@ public class TransactionHistoryActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.w(TAG, "Failed to read value.", error.toException());
+                Log.w(TAG, getString(R.string.failed_to_read_value), error.toException());
             }
         });
 
@@ -97,7 +97,7 @@ public class TransactionHistoryActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 searchPosition = position;
-                svTransaction.setQueryHint("Search By " + searches.get(position));
+                svTransaction.setQueryHint(getString(R.string.search_by) + searches.get(position));
 
 
                 // setting the adapter for the recyclerview again after searchPosition is updated
@@ -131,9 +131,9 @@ public class TransactionHistoryActivity extends AppCompatActivity {
     private void loadSearches() {
         searches = new ArrayList<>();
 
-        searches.add("category");
-        searches.add("amount");
-        searches.add("date");
+        searches.add(getString(R.string.category));
+        searches.add(getString(R.string.amount));
+        searches.add(getString(R.string.date));
     }
 
     private void loadData() {
@@ -161,7 +161,7 @@ public class TransactionHistoryActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Log or display the error
-                Log.e(TAG, "Failed to load transactions", error.toException());
+                Log.e(TAG, getString(R.string.failed_to_load_transactions), error.toException());
             }
         });
     }
@@ -182,9 +182,10 @@ public class TransactionHistoryActivity extends AppCompatActivity {
 
     public void seeBalance(View view) {
         if (txtAvailableBalance.getText().toString().equals("***** VND")) {
-            txtAvailableBalance.setText(balance + " VND");
+            String tempString = balance + getString(R.string.blank_vnd);
+            txtAvailableBalance.setText(tempString);
         } else {
-            txtAvailableBalance.setText("***** VND");
+            txtAvailableBalance.setText(getString(R.string.vnd));
         }
     }
 }

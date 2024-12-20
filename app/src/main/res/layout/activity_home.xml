@@ -45,7 +45,7 @@
                     android:id="@+id/txtName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="User Name"
+                    android:text="@string/user_name"
                     android:textColor="@color/wheatWhite"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -70,7 +70,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:text="Account Management"
+            android:text="@string/account_management"
             android:textColor="@color/wheatWhite"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -104,7 +104,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:text="Current Balance"
+                        android:text="@string/current_balance"
                         android:textColor="@color/wheatWhite"
                         android:textSize="18sp"
                         android:layout_weight="1"
@@ -115,7 +115,7 @@
                         android:id="@+id/txtBalance"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:text="***** VND"
+                        android:text="@string/vnd"
                         android:textColor="@color/wheatWhite"
                         android:textSize="22sp"
                         android:layout_weight="1"
@@ -125,47 +125,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:text="See current balance"
+                        android:text="@string/see_current_balance"
                         android:textColor="@color/green"
                         android:textSize="18sp"
                         android:layout_weight="1"
                         android:textStyle="bold"
                         android:gravity="center_vertical"
                         android:onClick="seeBalance"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="300dp"
-                    android:layout_height="200dp"
-                    android:orientation="vertical"
-                    android:padding="40dp"
-                    android:background="@drawable/rounded_blue_background"
-                    >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Current Balance"
-                        android:textColor="@color/wheatWhite"
-                        android:textSize="18sp"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="***** VND"
-                        android:textColor="@color/wheatWhite"
-                        android:textSize="22sp"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See current balance >"
-                        android:textColor="@color/wheatWhite"
-                        android:textSize="18sp"
                         />
 
                 </LinearLayout>
@@ -256,7 +222,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:text="Services"
+                android:text="@string/services"
                 android:textColor="@color/wheatWhite"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -292,7 +258,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Top Up"
+                        android:text="@string/top_up"
                         android:textColor="@color/wheatWhite"
                         android:textSize="20sp"
                         android:layout_gravity="center"
@@ -320,7 +286,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Transfer"
+                        android:text="@string/transfer"
                         android:textColor="@color/wheatWhite"
                         android:textSize="20sp"
                         android:layout_gravity="center"
@@ -348,7 +314,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="History"
+                        android:text="@string/history"
                         android:textColor="@color/wheatWhite"
                         android:textSize="20sp"
                         android:layout_gravity="center"
@@ -376,7 +342,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="News"
+                        android:text="@string/news"
                         android:textColor="@color/wheatWhite"
                         android:textSize="20sp"
                         android:layout_gravity="center"
@@ -414,7 +380,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Account"
+                        android:text="@string/account"
                         android:textColor="@color/wheatWhite"
                         android:textSize="20sp"
                         android:layout_gravity="center"
@@ -442,7 +408,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Analysis"
+                        android:text="@string/analysis"
                         android:textColor="@color/wheatWhite"
                         android:textSize="20sp"
                         android:layout_gravity="center"
@@ -470,7 +436,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Export"
+                        android:text="@string/export"
                         android:textColor="@color/wheatWhite"
                         android:textSize="20sp"
                         android:layout_gravity="center"
@@ -497,7 +463,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ATM(s)"
+                        android:text="@string/atm_s"
                         android:textColor="@color/wheatWhite"
                         android:textSize="20sp"
                         android:layout_gravity="center"

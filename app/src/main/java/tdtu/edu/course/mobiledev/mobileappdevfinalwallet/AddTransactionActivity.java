@@ -78,7 +78,7 @@ public class AddTransactionActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.w(TAG, "Failed to read value.", error.toException());
+                Log.w(TAG, getString(R.string.failed_to_read_value), error.toException());
             }
         });
 
@@ -94,10 +94,10 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         // Initialize the account list with default accounts
         accountList = new ArrayList<>();
-        accountList.add("Select an account");
-        accountList.add("Cash");
-        accountList.add("Bank");
-        accountList.add("Add Account...");
+        accountList.add(getString(R.string.select_an_account));
+        accountList.add(getString(R.string.cash));
+        accountList.add(getString(R.string.bank));
+        accountList.add(getString(R.string.add_account));
 
         // Set up the adapter for the account spinner
         accountAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_with_icon, accountList);
@@ -111,7 +111,7 @@ public class AddTransactionActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedAccount = accountList.get(position);
-                if (selectedAccount.equals("Add Account...")) {
+                if (selectedAccount.equals(getString(R.string.add_account))) {
                     showAddAccountDialog();
                 }
             }
@@ -123,11 +123,11 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         // Initialize the category list with default categories
         categoryList = new ArrayList<>();
-        categoryList.add("Select a category");
-        categoryList.add("Food");
-        categoryList.add("Transport");
-        categoryList.add("Shopping");
-        categoryList.add("Add Category...");
+        categoryList.add(getString(R.string.select_a_category));
+        categoryList.add(getString(R.string.food));
+        categoryList.add(getString(R.string.transport));
+        categoryList.add(getString(R.string.shopping));
+        categoryList.add(getString(R.string.add_category));
 
         // Set up the adapter for the category spinner
         categoryAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_with_addcategory_icon, categoryList);
@@ -141,7 +141,7 @@ public class AddTransactionActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCategory = categoryList.get(position);
-                if (selectedCategory.equals("Add Category...")) {
+                if (selectedCategory.equals(getString(R.string.add_category))) {
                     showAddCategoryDialog();
                 }
             }
@@ -181,8 +181,8 @@ public class AddTransactionActivity extends AppCompatActivity {
             boolean isIncome = checkBoxIncome.isChecked();
             boolean isExpense = checkBoxExpense.isChecked();
 
-            if (selectedAccount.equals("Select an account") || amount.isEmpty() || selectedCategory.equals("Select a category") || (!isIncome && !isExpense)) {
-                Toast.makeText(AddTransactionActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            if (selectedAccount.equals(getString(R.string.select_an_account)) || amount.isEmpty() || selectedCategory.equals(getString(R.string.select_a_category)) || (!isIncome && !isExpense)) {
+                Toast.makeText(AddTransactionActivity.this, R.string.please_fill_in_all_fields, Toast.LENGTH_SHORT).show();
             } else {
                 double tempAmount = Integer.parseInt(amount);
                 if ((tempAmount <= balance && isExpense) || (isIncome)) {
@@ -199,14 +199,14 @@ public class AddTransactionActivity extends AppCompatActivity {
                             }
 
                             reference.child("balance").setValue(balance);
-                            Toast.makeText(AddTransactionActivity.this, "Transaction saved!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddTransactionActivity.this, getString(R.string.transaction_saved), Toast.LENGTH_SHORT).show();
                             showNotification(selectedCategory, amount, isIncome);
                         } else {
-                            Toast.makeText(AddTransactionActivity.this, "Failed to save transaction", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddTransactionActivity.this, getString(R.string.failed_to_save_transaction), Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
-                    Toast.makeText(AddTransactionActivity.this, "Expense amount exceeds the current balance.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTransactionActivity.this, R.string.expense_amount_exceeds_the_current_balance, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -230,16 +230,16 @@ public class AddTransactionActivity extends AppCompatActivity {
     private void showNotification(String category, String amount, boolean isIncome) {
         String temp;
         if (isIncome) {
-            temp = "INCOME, ";
+            temp = getString(R.string.income1);
         } else {
-            temp = "EXPENSE. ";
+            temp = getString(R.string.expense1);
         }
         String channelId = "transaction_notifications";
         int notificationId = (int) System.currentTimeMillis();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.tdt_logo)
-                .setContentTitle("Transaction Saved")
+                .setContentTitle(getString(R.string.transaction_saved))
                 .setContentText(temp + "Category: " + category + ", Amount: " + amount)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
@@ -283,11 +283,11 @@ public class AddTransactionActivity extends AppCompatActivity {
 
     private void showAddCategoryDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add Category");
+        builder.setTitle(getString(R.string.add_category));
         final EditText input = new EditText(this);
         builder.setView(input);
 
-        builder.setPositiveButton("Add", (dialog, which) -> {
+        builder.setPositiveButton(R.string.add, (dialog, which) -> {
             String newCategory = input.getText().toString().trim();
             if (!newCategory.isEmpty()) {
                 categoryList.add(categoryList.size() - 1, newCategory);
@@ -295,7 +295,7 @@ public class AddTransactionActivity extends AppCompatActivity {
             }
         });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> dialog.cancel());
         builder.show();
     }
 

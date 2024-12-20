@@ -34,7 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calculator"
+            android:text="@string/calculator"
             android:textColor="@color/wheatWhite"
             android:textSize="22sp"
             android:layout_marginStart="8dp"/>
@@ -78,8 +78,8 @@
                 >
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/numon"
-                    android:text="On"
-                    android:textSize="35sp"
+                    android:text="@string/on"
+                    android:textSize="25sp"
                     android:textStyle="bold"
                     android:textColor="@color/wheatWhite"
                     style="@style/Button1"
@@ -88,7 +88,7 @@
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
                     android:id="@+id/num7"
-                    android:text="7"
+                    android:text="@string/_7"
                     android:textSize="35sp"
                     android:textStyle="bold"
                     android:textColor="@color/darkPurple"
@@ -96,7 +96,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="4"
+                    android:text="@string/_4"
                     android:id="@+id/num4"
                     android:textSize="35sp"
                     android:textStyle="bold"
@@ -105,7 +105,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="1"
+                    android:text="@string/_1"
                     android:id="@+id/num1"
                     android:textSize="35sp"
                     android:textStyle="bold"
@@ -114,9 +114,9 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="DEL"
+                    android:text="@string/del"
                     android:id="@+id/numdel"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     android:textStyle="bold"
                     android:textColor="@color/darkPurple"
                     />
@@ -132,7 +132,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="Off"
+                    android:text="@string/off"
                     android:id="@+id/numoff"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -141,7 +141,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="8"
+                    android:text="@string/_8"
                     android:id="@+id/num8"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -150,7 +150,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="5"
+                    android:text="@string/_5"
                     android:id="@+id/num5"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -159,7 +159,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="2"
+                    android:text="@string/_2"
                     android:id="@+id/num2"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -168,7 +168,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="0"
+                    android:text="@string/_0"
                     android:id="@+id/num0"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -186,7 +186,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="AC"
+                    android:text="@string/ac"
                     android:id="@+id/numac"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -195,7 +195,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="9"
+                    android:text="@string/_9"
                     android:id="@+id/num9"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -204,7 +204,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="6"
+                    android:text="@string/_6"
                     android:id="@+id/num6"
                     android:textSize="30sp"
                     android:textStyle="bold"
@@ -213,7 +213,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     style="@style/Button2"
-                    android:text="3"
+                    android:text="@string/_3"
                     android:id="@+id/num3"
                     android:textSize="30sp"
                     android:textStyle="bold"

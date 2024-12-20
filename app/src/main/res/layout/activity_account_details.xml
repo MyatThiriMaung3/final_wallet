@@ -24,14 +24,14 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_arrow_back"
             android:onClick="backHome"
-            android:contentDescription="Back icon" />
+            android:contentDescription="@string/back_icon" />
 
         <TextView
             android:textSize="20sp"
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Account Details"
+            android:text="@string/account_details"
             android:layout_marginStart="8dp" />
 
     </LinearLayout>
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="UserName" />
+            android:text="@string/username1" />
 
     </LinearLayout>
 
@@ -115,7 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
-            android:text="*****"
+            android:text="@string/star"
             android:textAlignment="center"
             />
 
@@ -171,7 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
-            android:text="***** VND"
+            android:text="@string/vnd"
             android:textAlignment="center" />
 
     </LinearLayout>
@@ -182,7 +182,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
-        android:text="see remaining balance"
+        android:text="@string/see_remaining_balance"
         android:onClick="seeBalance"
         android:textAlignment="center" />
 
@@ -194,7 +194,7 @@
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_marginTop="80dp"
-        android:text="Logout"
+        android:text="@string/logout"
         android:textStyle="bold"
         android:onClick="logout" />
 

@@ -33,7 +33,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Analysis"
+            android:text="@string/analysis"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:layout_marginStart="8dp"/>
@@ -54,7 +54,7 @@
             android:id="@+id/txtStandard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Standard"
+            android:text="@string/standard"
             android:textAlignment="center"
             android:layout_gravity="center"
             android:textSize="16sp"
@@ -67,7 +67,7 @@
             android:id="@+id/txtExpenseSpecific"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Specific"
+            android:text="@string/specific"
             android:textSize="16sp"
             android:textAlignment="center"
             android:layout_gravity="center"
@@ -88,7 +88,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Monthly Analysis"
+            android:text="@string/monthly_analysis"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/white"

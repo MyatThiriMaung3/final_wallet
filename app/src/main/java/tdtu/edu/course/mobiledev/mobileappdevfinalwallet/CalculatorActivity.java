@@ -97,7 +97,7 @@ public class CalculatorActivity extends AppCompatActivity {
 //            });
 
             b.setOnClickListener(view -> {
-                firstnum = Double.parseDouble(Screen.getText().toString());
+                firstnum = Double.parseDouble(convertBurmeseToArabicNumerals(Screen.getText().toString()));
                 // Map "X" to "*"
                 if (b.getText().toString().equals("X")) {
                     operation = "*";
@@ -130,7 +130,7 @@ public class CalculatorActivity extends AppCompatActivity {
 
 
         NumEqual.setOnClickListener(view -> {
-            double secondNum = Double.parseDouble(Screen.getText().toString());
+            double secondNum = Double.parseDouble(convertBurmeseToArabicNumerals(Screen.getText().toString()));
             double result;
             switch(operation){
                 case"/":
@@ -160,4 +160,18 @@ public class CalculatorActivity extends AppCompatActivity {
         startActivity(intentHome);
         finish();
     }
+
+    private String convertBurmeseToArabicNumerals(String input) {
+        return input.replace("၀", "0")
+                .replace("၁", "1")
+                .replace("၂", "2")
+                .replace("၃", "3")
+                .replace("၄", "4")
+                .replace("၅", "5")
+                .replace("၆", "6")
+                .replace("၇", "7")
+                .replace("၈", "8")
+                .replace("၉", "9");
+    }
+
 }

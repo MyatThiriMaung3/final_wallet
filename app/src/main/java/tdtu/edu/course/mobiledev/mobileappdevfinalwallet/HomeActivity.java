@@ -11,17 +11,22 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,9 +38,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
@@ -51,6 +53,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class HomeActivity extends AppCompatActivity {
@@ -69,6 +72,14 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String savedLanguage = prefs.getString("LANGUAGE", "en"); // Default to English
+
+        // Only set the locale if it’s not already set to the desired language
+        if (!getCurrentLocale().equals(savedLanguage)) {
+            setLocale(savedLanguage, false); // Do not recreate during initial setup
+        }
 
         Intent intentFromLogin = getIntent();
         name = intentFromLogin.getStringExtra("name");
@@ -103,7 +114,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.w(TAG, "Failed to read value.", error.toException());
+                Log.w(TAG, getString(R.string.failed_to_read_value1), error.toException());
             }
         });
 
@@ -132,37 +143,61 @@ public class HomeActivity extends AppCompatActivity {
                 drawerLayout.closeDrawer(navigationViewHome);
 
                 // Handle menu item clicks
-                switch (item.getTitle().toString()) {
-                    case "Home":
-                        // not doing anything as we are currently in home activity
-                        break;
-                    case "Account":
-                        switchToAccountDetails();
-                        break;
-                    case "Calculator":
-                        switchToCalculator();
-                        break;
-                    case "News":
-                        switchToNews();
-                        break;
-                    case "Debts":
-                        Toast.makeText(HomeActivity.this, "Debts clicked", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "Theme":
-                        Toast.makeText(HomeActivity.this, "Theme clicked", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "Language":
-                        Toast.makeText(HomeActivity.this, "Language clicked", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "Font size":
-                        Toast.makeText(HomeActivity.this, "Font Size clicked", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "Updates":
-                        Toast.makeText(HomeActivity.this, "Updates clicked", Toast.LENGTH_SHORT).show();
-                        break;
-                    case "Logout":
-                        logout();
-                        break;
+//                switch (item.getTitle().toString()) {
+//                    case getString(R.string.top_up):
+//                        // not doing anything as we are currently in home activity
+//                        break;
+//                    case "Account":
+//                        switchToAccountDetails();
+//                        break;
+//                    case "Calculator":
+//                        switchToCalculator();
+//                        break;
+//                    case "News":
+//                        switchToNews();
+//                        break;
+//                    case "Debts":
+//                        Toast.makeText(HomeActivity.this, "Debts clicked", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case "Theme":
+//                        Toast.makeText(HomeActivity.this, "Theme clicked", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case "Language":
+//                        changeLanguage();
+//                        break;
+//                    case "Font size":
+//                        Toast.makeText(HomeActivity.this, "Font Size clicked", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case "Updates":
+//                        Toast.makeText(HomeActivity.this, "Updates clicked", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case "Logout":
+//                        logout();
+//                        break;
+//                }
+
+                String title = item.getTitle().toString();
+
+                if (title.equals(getString(R.string.home))) {
+                    // Not doing anything as we are currently in home activity
+                } else if (title.equals(getString(R.string.account1))) {
+                    switchToAccountDetails();
+                } else if (title.equals(getString(R.string.calculator))) {
+                    switchToCalculator();
+                } else if (title.equals(getString(R.string.news))) {
+                    switchToNews();
+                } else if (title.equals(getString(R.string.theme))) {
+                    Toast.makeText(HomeActivity.this, "Theme clicked", Toast.LENGTH_SHORT).show();
+                } else if (title.equals(getString(R.string.english))) {
+                    setLocale("en", true);
+                } else if (title.equals(getString(R.string.burmese))) {
+                    setLocale("my", true);
+                } else if (title.equals(getString(R.string.vietnamese))) {
+                    setLocale("vi", true);
+                } else if (title.equals(getString(R.string.updates))) {
+                    Toast.makeText(HomeActivity.this, "Updates clicked", Toast.LENGTH_SHORT).show();
+                } else if (title.equals(getString(R.string.logout))) {
+                    logout();
                 }
 
                 return true;
@@ -218,17 +253,17 @@ public class HomeActivity extends AppCompatActivity {
     private void showNotification(String category, String amount, boolean isIncome) {
         String temp;
         if (isIncome) {
-            temp = "INCOME, ";
+            temp = getString(R.string.income1);
         } else {
-            temp = "EXPENSE. ";
+            temp = getString(R.string.expense1);
         }
-        String channelId = "transaction_notifications";
+        String channelId = getString(R.string.transaction_notifications);
         int notificationId = (int) System.currentTimeMillis();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.tdt_logo)
-                .setContentTitle("Transaction Saved")
-                .setContentText(temp + "Category: " + category + ", Amount: " + amount)
+                .setContentTitle(getString(R.string.transaction_saved))
+                .setContentText(temp + getString(R.string.category1) + category + getString(R.string.amount1) + amount)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
@@ -294,7 +329,8 @@ public class HomeActivity extends AppCompatActivity {
 
     public void seeBalance(View view) {
         if (txtBalance.getText().toString().equals("***** VND")) {
-            txtBalance.setText(balance + " VND");
+            String tempString = balance + " VND";
+            txtBalance.setText(tempString);
         } else {
             txtBalance.setText("***** VND");
         }
@@ -322,11 +358,11 @@ public class HomeActivity extends AppCompatActivity {
 
     public void topUp(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Top Up");
+        builder.setTitle(R.string.top_up5);
         final EditText input = new EditText(this);
         builder.setView(input);
 
-        builder.setPositiveButton("Top Up", (dialog, which) -> {
+        builder.setPositiveButton(R.string.top_up, (dialog, which) -> {
             String addBalance = input.getText().toString().trim();
             if (!addBalance.isEmpty()) {
                 double newBalance = balance + Double.parseDouble(addBalance);
@@ -336,20 +372,20 @@ public class HomeActivity extends AppCompatActivity {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 String formattedDate = dateFormat.format(new Date());
 
-                Transaction transaction = new Transaction("Bank", "Top Up", addBalance, "From Top Up", formattedDate, true);
+                Transaction transaction = new Transaction(getString(R.string.bank), getString(R.string.top_up3), addBalance, getString(R.string.from_top_up), formattedDate, true);
                 String transactionId = reference.push().getKey();
                 reference.child(name).child("transactions").child(Objects.requireNonNull(transactionId)).setValue(transaction).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(HomeActivity.this, "Transaction from TopUp saved!", Toast.LENGTH_SHORT).show();
-                        showNotification("Top Up", addBalance, true);
+                        Toast.makeText(HomeActivity.this, R.string.transaction_from_topup_saved, Toast.LENGTH_SHORT).show();
+                        showNotification(getString(R.string.top_up2), addBalance, true);
                     } else {
-                        Toast.makeText(HomeActivity.this, "Failed to save transaction", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, R.string.failed_to_save_transaction, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel());
         builder.show();
     }
 
@@ -374,9 +410,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == STORAGE_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Storage Permission Granted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.storage_permission_granted, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Storage Permission Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.storage_permission_denied, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -421,13 +457,13 @@ public class HomeActivity extends AppCompatActivity {
                     outputStream.flush();
                 }
 
-                Toast.makeText(context, "CSV exported successfully to Downloads.", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.csv_exported_successfully_to_downloads, Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(context, "Failed to create CSV file.", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.failed_to_create_csv_file, Toast.LENGTH_LONG).show();
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context, "Error exporting CSV: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, getString(R.string.error_exporting_csv) + e.getMessage(), Toast.LENGTH_LONG).show();
         } finally {
             // Close the stream
             if (outputStream != null) {
@@ -439,4 +475,31 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void setLocale(String languageCode, boolean recreateActivity) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+
+        Resources resources = getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        getBaseContext().getResources().updateConfiguration(config, resources.getDisplayMetrics());
+
+        // Save the selected language to SharedPreferences
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putString("LANGUAGE", languageCode);
+        editor.apply();
+
+        // Only recreate the activity when explicitly requested
+        if (recreateActivity) {
+            recreate();
+        }
+    }
+
+    private String getCurrentLocale() {
+        return getResources().getConfiguration().getLocales().get(0).getLanguage();
+    }
+
+
+
 }

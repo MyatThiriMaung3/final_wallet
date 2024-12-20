@@ -99,7 +99,7 @@ public class AnalysisActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.w(TAG, "Failed to read value.", error.toException());
+                Log.w(TAG, getString(R.string.failed_to_read_value2), error.toException());
             }
         });
 
@@ -255,21 +255,24 @@ public class AnalysisActivity extends AppCompatActivity {
 
 
         // Setting the texts
-        txtTotalExpenses.setText(sumExpense + " VND");
-        txtTotalIncome.setText(sumIncome + " VND");
+        String tempTotalExpense = sumExpense + " VND";
+        String tempTotalIncome = sumIncome + " VND";
+        txtTotalExpenses.setText(tempTotalExpense);
+        txtTotalIncome.setText(tempTotalIncome);
 
         String tempText;
         if (sumIncome > sumExpense) {
-            tempText = "You got more money then you spend! Well done! Do it like this next months too.";
+            tempText = getString(R.string.you_got_more_money_then_you_spend_well_done_do_it_like_this_next_months_too);
         } else if (sumIncome < sumExpense) {
-            tempText = "You are spending too much. Your income is lower then your spending. Please reconsider before you spend!";
+            tempText = getString(R.string.you_are_spending_too_much_your_income_is_lower_then_your_spending_please_reconsider_before_you_spend);
         } else {
-            tempText = "What a coincidence! Your income and your expenses are the same!";
+            tempText = getString(R.string.what_a_coincidence_your_income_and_your_expenses_are_the_same);
         }
 
         txtSummary.setText(String.format("In this month, your total expenses is %d VND and your total income is %d VND.%n%s", sumExpense, sumIncome, tempText));
 
-        txtTotalSpending.setText(sumExpense + " VND");
+        String tempTotalSpending = sumExpense + " VND";
+        txtTotalSpending.setText(tempTotalSpending);
 
         if (sumExpense == 0) {
             txtSummarySpecific.setText("");

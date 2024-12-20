@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="80dp"
+    android:paddingTop="20dp"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp"
+    android:background="@color/darkPurple"
+    tools:context=".CalculatorActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="40dp"
+        >
+
+        <ImageView
+            android:id="@+id/back_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back_icon"
+            android:padding="8dp"
+            android:onClick="backHome"
+            app:tint="@color/wheatWhite" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Calculator"
+            android:textColor="@color/wheatWhite"
+            android:textSize="22sp"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="0"
+            android:id="@+id/screen"
+            android:textColor="@color/wheatWhite"
+            android:textSize="60sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="35dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_above="@+id/nums"
+            />
+
+        <LinearLayout
+            android:id="@+id/nums"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="40dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/numon"
+                    android:text="On"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/wheatWhite"
+                    style="@style/Button1"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:id="@+id/num7"
+                    android:text="7"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="4"
+                    android:id="@+id/num4"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="1"
+                    android:id="@+id/num1"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="DEL"
+                    android:id="@+id/numdel"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="Off"
+                    android:id="@+id/numoff"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="8"
+                    android:id="@+id/num8"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="5"
+                    android:id="@+id/num5"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="2"
+                    android:id="@+id/num2"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="0"
+                    android:id="@+id/num0"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="AC"
+                    android:id="@+id/numac"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="9"
+                    android:id="@+id/num9"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="6"
+                    android:id="@+id/num6"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="3"
+                    android:id="@+id/num3"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="."
+                    android:id="@+id/numpoint"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="/"
+                    android:id="@+id/numdiv"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="X"
+                    android:id="@+id/nummul"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="+"
+                    android:id="@+id/numplus"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="-"
+                    android:id="@+id/numminus"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    style="@style/Button2"
+                    android:text="="
+                    android:id="@+id/numequal"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkPurple"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

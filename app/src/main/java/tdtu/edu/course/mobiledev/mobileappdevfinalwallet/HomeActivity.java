@@ -133,7 +133,7 @@ public class HomeActivity extends AppCompatActivity {
                         switchToAccountDetails();
                         break;
                     case "Calculator":
-                        Toast.makeText(HomeActivity.this, "Calculator clicked", Toast.LENGTH_SHORT).show();
+                        switchToCalculator();
                         break;
                     case "News":
                         switchToNews();
@@ -162,6 +162,12 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void switchToCalculator() {
+        Intent intentCalculator = new Intent(this, CalculatorActivity.class);
+        intentCalculator.putExtra("name", name);
+        startActivity(intentCalculator);
     }
 
     private void scheduleDailyReport() {

@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
 
     <application
         android:allowBackup="true"
@@ -21,8 +22,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileAppDevFinalWallet"
         tools:targetApi="31">
+        <activity
+            android:name=".CalculatorActivity"
+            android:exported="false" />
 
         <receiver android:name=".DailyReportReceiver" />
+
         <service android:name=".DailyReportService" />
 
         <activity

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:gravity="bottom"
     android:padding="35dp"
-    android:background="@drawable/wavy_background"
+    android:background="@drawable/bg_wavy"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
 
@@ -19,7 +19,7 @@
             android:id="@+id/imgProfile"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/default_profile"
+            android:src="@drawable/profile_default"
             android:layout_gravity="center"
             />
 

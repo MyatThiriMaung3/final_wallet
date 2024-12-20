@@ -1,4 +1,4 @@
-package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
+package tdtu.edu.course.mobiledev.mobileappdevfinalwallet.adapters;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.LinkedList;
+
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.R;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.pojos.Transaction;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.MyViewHolder> implements Filterable {
 
@@ -29,7 +32,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     @NonNull
     @Override
     public TransactionAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.transaction_recycler_view_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_transaction_recycler_view, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -87,9 +90,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             txtNote = itemView.findViewById(R.id.txtNote);
         }
     }
-
-
-    // things related to the Filterable interface
 
     @Override
     public Filter getFilter() {

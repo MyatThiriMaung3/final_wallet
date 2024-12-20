@@ -1,4 +1,4 @@
-package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
+package tdtu.edu.course.mobiledev.mobileappdevfinalwallet.pojos;
 
 import java.io.Serializable;
 
@@ -10,12 +10,9 @@ public class Transaction implements Serializable {
     private String date;
     private boolean isIncome;
 
-    // Constructor
     public Transaction() {
-        // Default constructor required for calls to DataSnapshot.getValue(Transaction.class)
     }
 
-    // Constructor with parameters
     public Transaction(String account, String category, String amount, String note, String date, boolean isIncome) {
         this.account = account;
         this.category = category;
@@ -25,11 +22,9 @@ public class Transaction implements Serializable {
         this.isIncome = isIncome;
     }
 
-    // Getters and Setters
     public String getAccount() {
         return account;
     }
-
     public void setAccount(String account) {
         this.account = account;
     }

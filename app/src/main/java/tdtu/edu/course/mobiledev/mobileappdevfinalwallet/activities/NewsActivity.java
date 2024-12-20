@@ -1,4 +1,4 @@
-package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
+package tdtu.edu.course.mobiledev.mobileappdevfinalwallet.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,14 +6,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,11 +22,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.interfaces.NewsAPI;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.adapters.NewsAdapter;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.pojos.NewsResponse;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.R;
 
 public class NewsActivity extends AppCompatActivity {
     private static final String BASE_URL = "https://newsapi.org/";
     private static final String API_KEY = "e5a3545260d34caaa6aa6c4430892a52"; // Your API key
     private RecyclerView recyclerView;
+    private androidx.appcompat.widget.Toolbar toolbar;
     private NewsAdapter newsAdapter;
     private String name;
 
@@ -41,16 +44,18 @@ public class NewsActivity extends AppCompatActivity {
         Intent intentFromHome = getIntent();
         name = intentFromHome.getStringExtra("name");
 
-        // Toolbar setup
-        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.news_toolbar);
-        setSupportActionBar(toolbar);
+        initializeViews();
 
-        // RecyclerView setup
-        recyclerView = findViewById(R.id.recycler_view);
+        setSupportActionBar(toolbar);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Load default news articles
         fetchNews("finance");
+    }
+
+    private void initializeViews() {
+        toolbar = findViewById(R.id.news_toolbar);
+        recyclerView = findViewById(R.id.recycler_view);
     }
 
     private void fetchNews(String query) {

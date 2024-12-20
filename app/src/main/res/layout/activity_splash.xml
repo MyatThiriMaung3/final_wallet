@@ -8,12 +8,12 @@
     android:orientation="vertical"
     android:background="@color/darkPurple"
     android:padding="60dp"
-    tools:context=".SplashActivity">
+    tools:context=".activities.SplashActivity">
 
     <ImageView
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:src="@drawable/tdt_logo"
+        android:src="@drawable/ic_tdt"
         android:layout_marginTop="100dp"
         android:layout_gravity="center"
         />
@@ -21,8 +21,8 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/wallet_icon"
-        android:background="@drawable/circular_background"
+        android:src="@drawable/ic_wallet"
+        android:background="@drawable/bg_circular"
         android:layout_gravity="center"
         android:paddingTop="20dp"
         android:paddingBottom="25dp"
@@ -56,7 +56,7 @@
         android:textColor="@color/darkPurple"
         android:layout_gravity="center"
         android:layout_marginTop="80dp"
-        android:background="@drawable/button_background"
+        android:background="@drawable/bg_normal_button"
         />
 
 </LinearLayout>

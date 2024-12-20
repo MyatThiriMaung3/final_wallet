@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="@color/darkPurple"
     android:paddingBottom="60dp"
-    tools:context=".TransactionHistoryActivity"
+    tools:context=".activities.TransactionHistoryActivity"
     android:focusableInTouchMode="true">
 
     <LinearLayout
@@ -118,7 +118,7 @@
             app:queryHint="@string/search_by_categories"
             app:iconifiedByDefault="false"
             android:layout_gravity="center"
-            android:background="@drawable/search_background"
+            android:background="@drawable/bg_search"
             android:layout_weight="3"
             />
 
@@ -129,7 +129,7 @@
             android:layout_weight="1"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:background="@drawable/button_background"
+            android:background="@drawable/bg_normal_button"
             android:layout_marginLeft="20dp"
             />
 
@@ -166,7 +166,7 @@
         android:textSize="16sp"
         android:textColor="#19173D"
         android:backgroundTint="@null"
-        android:background="@drawable/button_background"
+        android:background="@drawable/bg_normal_button"
         android:onClick="switchAnalysisActivity"
         />
 

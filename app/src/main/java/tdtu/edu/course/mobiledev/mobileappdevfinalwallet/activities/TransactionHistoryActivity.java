@@ -1,4 +1,4 @@
-package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
+package tdtu.edu.course.mobiledev.mobileappdevfinalwallet.activities;
 
 import static android.content.ContentValues.TAG;
 
@@ -15,9 +15,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +26,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.R;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.pojos.Transaction;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.adapters.TransactionAdapter;
 
 public class TransactionHistoryActivity extends AppCompatActivity {
     private TextView txtAvailableBalance;
@@ -52,16 +53,77 @@ public class TransactionHistoryActivity extends AppCompatActivity {
         Intent intentFromHome = getIntent();
         name = intentFromHome.getStringExtra("name");
 
-        txtAvailableBalance = findViewById(R.id.txtAvailableBalance);
-        txtName = findViewById(R.id.txtName);
-        rvTransaction = findViewById(R.id.rvTransaction);
-        svTransaction = findViewById(R.id.svTransaction);
-        spinnerSearches = findViewById(R.id.spinnerSearches);
-
         reference = FirebaseDatabase.getInstance().getReference("User").child(name);
+
+        initializeViews();
 
         txtName.setText(name);
 
+        loadBalance();
+        loadData();
+        loadSearches();
+        setUpSpinnerSearches();
+        setUpRvTransaction();
+        svTransactionEventHandler();
+    }
+
+    private void setUpRvTransaction() {
+        setRvTransactionAdapter();
+        rvTransaction.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void setUpSpinnerSearches() {
+        setSpinnerSearchesAdapter();
+        spinnerSearches.setSelection(0);
+        spinnerSearchesEventHandler();
+    }
+
+    private void setRvTransactionAdapter() {
+        adapter = new TransactionAdapter(transactions, searchPosition);
+        rvTransaction.setAdapter(adapter);
+    }
+
+    private void spinnerSearchesEventHandler() {
+        spinnerSearches.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                searchPosition = position;
+                svTransaction.setQueryHint(getString(R.string.search_by) + searches.get(position));
+
+
+                // setting the adapter for the recyclerview again after searchPosition is updated
+                setRvTransactionAdapter();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void svTransactionEventHandler() {
+        svTransaction.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+    }
+
+    private void setSpinnerSearchesAdapter() {
+        ArrayAdapter<String> searchesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, searches);
+        searchesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSearches.setAdapter(searchesAdapter);
+    }
+
+    private void loadBalance() {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -78,54 +140,14 @@ public class TransactionHistoryActivity extends AppCompatActivity {
                 Log.w(TAG, getString(R.string.failed_to_read_value), error.toException());
             }
         });
+    }
 
-        loadData();
-        loadSearches();
-
-        adapter = new TransactionAdapter(transactions, searchPosition);
-        rvTransaction.setAdapter(adapter);
-
-        ArrayAdapter<String> searchesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, searches);
-        searchesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerSearches.setAdapter(searchesAdapter);
-
-        // setting default value for the spinnerSearches
-        spinnerSearches.setSelection(0);
-
-        // setting the on click item listener for the selected spinner item
-        spinnerSearches.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                searchPosition = position;
-                svTransaction.setQueryHint(getString(R.string.search_by) + searches.get(position));
-
-
-                // setting the adapter for the recyclerview again after searchPosition is updated
-                adapter = new TransactionAdapter(transactions, searchPosition);
-                rvTransaction.setAdapter(adapter);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        rvTransaction.setLayoutManager(new LinearLayoutManager(this));
-
-
-        svTransaction.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
-                return false;
-            }
-        });
+    private void initializeViews() {
+        txtAvailableBalance = findViewById(R.id.txtAvailableBalance);
+        txtName = findViewById(R.id.txtName);
+        rvTransaction = findViewById(R.id.rvTransaction);
+        svTransaction = findViewById(R.id.svTransaction);
+        spinnerSearches = findViewById(R.id.spinnerSearches);
     }
 
     private void loadSearches() {
@@ -160,7 +182,6 @@ public class TransactionHistoryActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Log or display the error
                 Log.e(TAG, getString(R.string.failed_to_load_transactions), error.toException());
             }
         });

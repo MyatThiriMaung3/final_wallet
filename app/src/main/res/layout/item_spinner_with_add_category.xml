@@ -8,4 +8,4 @@
     android:textColor="@color/white"
     android:gravity="center_vertical"
     android:drawablePadding="8dp"
-    app:drawableEndCompat="@drawable/ic_tofromaccount" />
+    app:drawableEndCompat="@drawable/ic_add_category" />

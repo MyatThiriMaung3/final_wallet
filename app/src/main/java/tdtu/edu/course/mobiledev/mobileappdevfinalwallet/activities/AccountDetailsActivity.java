@@ -1,4 +1,4 @@
-package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
+package tdtu.edu.course.mobiledev.mobileappdevfinalwallet.activities;
 
 import static android.content.ContentValues.TAG;
 
@@ -11,15 +11,15 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.R;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.authentications.LoginActivity;
 
 public class AccountDetailsActivity extends AppCompatActivity {
     private String name = "";
@@ -44,15 +44,17 @@ public class AccountDetailsActivity extends AppCompatActivity {
 
         reference = FirebaseDatabase.getInstance().getReference("User").child(name);
 
-        txtUserName = findViewById(R.id.txtUserName);
-        txtName = findViewById(R.id.txtName);
-        txtPhone = findViewById(R.id.txtPhone);
-        txtPassword = findViewById(R.id.txtPassword);
-        txtBalance = findViewById(R.id.txtBalance);
+        initializeViews();
+        setViewValues();
+        loadDataFromFirebase();
+    }
 
+    private void setViewValues() {
         txtUserName.setText(name);
         txtName.setText(name);
+    }
 
+    private void loadDataFromFirebase() {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -80,8 +82,14 @@ public class AccountDetailsActivity extends AppCompatActivity {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
+    }
 
-
+    private void initializeViews() {
+        txtUserName = findViewById(R.id.txtUserName);
+        txtName = findViewById(R.id.txtName);
+        txtPhone = findViewById(R.id.txtPhone);
+        txtPassword = findViewById(R.id.txtPassword);
+        txtBalance = findViewById(R.id.txtBalance);
     }
 
     public void seeBalance(View view) {

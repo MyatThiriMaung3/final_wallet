@@ -34,7 +34,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="30dp"
         android:layout_gravity="center"
-        android:background="@drawable/analysis_background"
+        android:background="@drawable/bg_analysis"
         android:layout_weight="12"
         />
 
@@ -58,7 +58,7 @@
         android:textColor="@color/black"
         android:textSize="12sp"
         android:padding="30dp"
-        android:background="@drawable/button_background"
+        android:background="@drawable/bg_normal_button"
         android:layout_weight="5"
         android:onClick="switchAddTransactionActivity"
         />

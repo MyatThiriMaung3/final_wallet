@@ -1,4 +1,4 @@
-package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
+package tdtu.edu.course.mobiledev.mobileappdevfinalwallet.activities;
 
 import static android.content.ContentValues.TAG;
 
@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +55,12 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.receivers.DailyReportReceiver;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.receivers.LowBatteryReceiver;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.R;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.pojos.Transaction;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.authentications.LoginActivity;
+
 public class HomeActivity extends AppCompatActivity {
     private LowBatteryReceiver lowBatteryReceiver;
     private static final int STORAGE_PERMISSION_CODE = 100;
@@ -73,34 +78,41 @@ public class HomeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String savedLanguage = prefs.getString("LANGUAGE", "en"); // Default to English
-
-        // Only set the locale if it’s not already set to the desired language
-        if (!getCurrentLocale().equals(savedLanguage)) {
-            setLocale(savedLanguage, false); // Do not recreate during initial setup
-        }
-
         Intent intentFromLogin = getIntent();
         name = intentFromLogin.getStringExtra("name");
 
         reference = FirebaseDatabase.getInstance().getReference("User");
 
-        // Register the LowBatteryReceiver dynamically
-        lowBatteryReceiver = new LowBatteryReceiver();
-        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_LOW);
-        registerReceiver(lowBatteryReceiver, filter);
-
+        setLanguageToEngFirst();
+        registerLowBatteryReceiver();
         createNotificationChannel();
         scheduleDailyReport();
+        setStoragePermissionRequest();
 
-        // Check and request storage permissions
+        loadBalance();
+        initializeViews();
+
+        txtName.setText(name);
+
+        initializeEventHandlers();
+
+    }
+
+    private void initializeEventHandlers() {
+        imgSettingsEventHandler();
+
+        navigationViewHomeEventHandler();
+    }
+
+    private void setStoragePermissionRequest() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             if (!isStoragePermissionGranted()) {
                 requestStoragePermission();
             }
         }
+    }
 
+    private void loadBalance() {
         reference.child(name).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -117,64 +129,20 @@ public class HomeActivity extends AppCompatActivity {
                 Log.w(TAG, getString(R.string.failed_to_read_value1), error.toException());
             }
         });
+    }
 
+    private void registerLowBatteryReceiver() {
+        lowBatteryReceiver = new LowBatteryReceiver();
+        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_LOW);
+        registerReceiver(lowBatteryReceiver, filter);
+    }
 
-        drawerLayout = findViewById(R.id.main);
-        navigationViewHome = findViewById(R.id.navigationViewHome);
-        imgSettings = findViewById(R.id.imgSettings);
-        txtName = findViewById(R.id.txtName);
-        txtBalance = findViewById(R.id.txtBalance);
-
-        txtName.setText(name);
-
-        imgSettings.setOnClickListener(v -> {
-            if (drawerLayout.isDrawerOpen(navigationViewHome)) {
-                drawerLayout.closeDrawer(navigationViewHome);
-            } else {
-                drawerLayout.openDrawer(navigationViewHome);
-            }
-        });
-
-        // Handle navigation item clicks
+    private void navigationViewHomeEventHandler() {
         navigationViewHome.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 // Close the drawer after selection
                 drawerLayout.closeDrawer(navigationViewHome);
-
-                // Handle menu item clicks
-//                switch (item.getTitle().toString()) {
-//                    case getString(R.string.top_up):
-//                        // not doing anything as we are currently in home activity
-//                        break;
-//                    case "Account":
-//                        switchToAccountDetails();
-//                        break;
-//                    case "Calculator":
-//                        switchToCalculator();
-//                        break;
-//                    case "News":
-//                        switchToNews();
-//                        break;
-//                    case "Debts":
-//                        Toast.makeText(HomeActivity.this, "Debts clicked", Toast.LENGTH_SHORT).show();
-//                        break;
-//                    case "Theme":
-//                        Toast.makeText(HomeActivity.this, "Theme clicked", Toast.LENGTH_SHORT).show();
-//                        break;
-//                    case "Language":
-//                        changeLanguage();
-//                        break;
-//                    case "Font size":
-//                        Toast.makeText(HomeActivity.this, "Font Size clicked", Toast.LENGTH_SHORT).show();
-//                        break;
-//                    case "Updates":
-//                        Toast.makeText(HomeActivity.this, "Updates clicked", Toast.LENGTH_SHORT).show();
-//                        break;
-//                    case "Logout":
-//                        logout();
-//                        break;
-//                }
 
                 String title = item.getTitle().toString();
 
@@ -186,8 +154,6 @@ public class HomeActivity extends AppCompatActivity {
                     switchToCalculator();
                 } else if (title.equals(getString(R.string.news))) {
                     switchToNews();
-                } else if (title.equals(getString(R.string.theme))) {
-                    Toast.makeText(HomeActivity.this, "Theme clicked", Toast.LENGTH_SHORT).show();
                 } else if (title.equals(getString(R.string.english))) {
                     setLocale("en", true);
                 } else if (title.equals(getString(R.string.burmese))) {
@@ -203,7 +169,34 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
 
+    private void imgSettingsEventHandler() {
+        imgSettings.setOnClickListener(v -> {
+            if (drawerLayout.isDrawerOpen(navigationViewHome)) {
+                drawerLayout.closeDrawer(navigationViewHome);
+            } else {
+                drawerLayout.openDrawer(navigationViewHome);
+            }
+        });
+    }
+
+    private void initializeViews() {
+        drawerLayout = findViewById(R.id.main);
+        navigationViewHome = findViewById(R.id.navigationViewHome);
+        imgSettings = findViewById(R.id.imgSettings);
+        txtName = findViewById(R.id.txtName);
+        txtBalance = findViewById(R.id.txtBalance);
+    }
+
+    private void setLanguageToEngFirst() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String savedLanguage = prefs.getString("LANGUAGE", "en"); // Default to English
+
+        // Only set the locale if it’s not already set to the desired language
+        if (!getCurrentLocale().equals(savedLanguage)) {
+            setLocale(savedLanguage, false); // Do not recreate during initial setup
+        }
     }
 
     private void switchToCalculator() {
@@ -261,7 +254,7 @@ public class HomeActivity extends AppCompatActivity {
         int notificationId = (int) System.currentTimeMillis();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.tdt_logo)
+                .setSmallIcon(R.drawable.ic_tdt)
                 .setContentTitle(getString(R.string.transaction_saved))
                 .setContentText(temp + getString(R.string.category1) + category + getString(R.string.amount1) + amount)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
@@ -499,7 +492,5 @@ public class HomeActivity extends AppCompatActivity {
     private String getCurrentLocale() {
         return getResources().getConfiguration().getLocales().get(0).getLanguage();
     }
-
-
 
 }

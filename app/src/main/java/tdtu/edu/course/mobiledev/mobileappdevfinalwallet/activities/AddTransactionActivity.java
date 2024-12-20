@@ -1,4 +1,4 @@
-package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
+package tdtu.edu.course.mobiledev.mobileappdevfinalwallet.activities;
 
 import static android.content.ContentValues.TAG;
 
@@ -25,9 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +37,9 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
 
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.R;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.pojos.Transaction;
+
 public class AddTransactionActivity extends AppCompatActivity {
     private String name = "";
     private double balance = -1;
@@ -49,6 +49,7 @@ public class AddTransactionActivity extends AppCompatActivity {
     private ArrayAdapter<String> accountAdapter, categoryAdapter;
     private EditText editTextAmount, editTextNote;
     private Button chooseDayButton;
+    private Button saveTransactionButton;
     private CheckBox checkBoxIncome, checkBoxExpense;
     private String selectedDate = "";
     private DatabaseReference reference;
@@ -65,78 +66,33 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         createNotificationChannel();
 
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    Double tempBalance = snapshot.child("balance").getValue(Double.class);
-                    if (tempBalance != null) {
-                        balance = tempBalance;
-                    }
-                }
-            }
+        loadBalance();
+        initializeViews();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w(TAG, getString(R.string.failed_to_read_value), error.toException());
-            }
-        });
+        accountSpinnerSetUp();
 
-        // Initialize views
-        accountSpinner = findViewById(R.id.account_spinner);
-        categorySpinner = findViewById(R.id.category_spinner);
-        editTextAmount = findViewById(R.id.editTextAmount);
-        editTextNote = findViewById(R.id.editTextNote);
-        chooseDayButton = findViewById(R.id.choose_day_button);
-        Button saveTransactionButton = findViewById(R.id.save_transaction_button);
-        checkBoxIncome = findViewById(R.id.checkBoxIncome);
-        checkBoxExpense = findViewById(R.id.checkBoxExpense);
+        categorySpinnerSetUp();
 
-        // Initialize the account list with default accounts
-        accountList = new ArrayList<>();
-        accountList.add(getString(R.string.select_an_account));
-        accountList.add(getString(R.string.cash));
-        accountList.add(getString(R.string.bank));
-        accountList.add(getString(R.string.add_account));
+        setDate();
+        validateCheckboxes();
+        saveTransactionButtonEventHandler();
+    }
 
-        // Set up the adapter for the account spinner
-        accountAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_with_icon, accountList);
-        accountAdapter.setDropDownViewResource(R.layout.spinner_item);
-        accountSpinner.setAdapter(accountAdapter);
-
-        // Prevent selection of the placeholder
-        accountSpinner.setSelection(0, false);
-
-        accountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedAccount = accountList.get(position);
-                if (selectedAccount.equals(getString(R.string.add_account))) {
-                    showAddAccountDialog();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        // Initialize the category list with default categories
-        categoryList = new ArrayList<>();
-        categoryList.add(getString(R.string.select_a_category));
-        categoryList.add(getString(R.string.food));
-        categoryList.add(getString(R.string.transport));
-        categoryList.add(getString(R.string.shopping));
-        categoryList.add(getString(R.string.add_category));
-
-        // Set up the adapter for the category spinner
-        categoryAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_with_addcategory_icon, categoryList);
-        categoryAdapter.setDropDownViewResource(R.layout.spinner_item);
-        categorySpinner.setAdapter(categoryAdapter);
-
-        // Prevent selection of the placeholder
+    private void categorySpinnerSetUp() {
+        initializeCategoryList();
+        setCategorySpinnerAdapter();
         categorySpinner.setSelection(0, false);
+        categorySpinnerEventHandler();
+    }
 
+    private void accountSpinnerSetUp() {
+        initializeAccountList();
+        setAccountSpinnerAdapter();
+        accountSpinner.setSelection(0, false);
+        accountSpinnerEventHandler();
+    }
+
+    private void categorySpinnerEventHandler() {
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -150,8 +106,35 @@ public class AddTransactionActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
 
-        // Initialize the current date as the default date
+    private void accountSpinnerEventHandler() {
+        accountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedAccount = accountList.get(position);
+                if (selectedAccount.equals(getString(R.string.add_account))) {
+                    showAddAccountDialog();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    private void validateCheckboxes() {
+        checkBoxIncome.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) checkBoxExpense.setChecked(false);
+        });
+
+        checkBoxExpense.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) checkBoxIncome.setChecked(false);
+        });
+    }
+
+    private void setDate() {
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -163,16 +146,9 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         // Date picker
         chooseDayButton.setOnClickListener(v -> showDatePickerDialog());
+    }
 
-        checkBoxIncome.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) checkBoxExpense.setChecked(false);
-        });
-
-        checkBoxExpense.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) checkBoxIncome.setChecked(false);
-        });
-
-        // Save button functionality
+    private void saveTransactionButtonEventHandler() {
         saveTransactionButton.setOnClickListener(v -> {
             String amount = editTextAmount.getText().toString().trim();
             String selectedAccount = accountSpinner.getSelectedItem().toString();
@@ -212,6 +188,65 @@ public class AddTransactionActivity extends AppCompatActivity {
         });
     }
 
+    private void setAccountSpinnerAdapter() {
+        accountAdapter = new ArrayAdapter<>(this, R.layout.item_spinner_with_icon, accountList);
+        accountAdapter.setDropDownViewResource(R.layout.item_spinner);
+        accountSpinner.setAdapter(accountAdapter);
+    }
+
+    private void setCategorySpinnerAdapter() {
+        categoryAdapter = new ArrayAdapter<>(this, R.layout.item_spinner_with_add_category, categoryList);
+        categoryAdapter.setDropDownViewResource(R.layout.item_spinner);
+        categorySpinner.setAdapter(categoryAdapter);
+    }
+
+    private void initializeCategoryList() {
+        categoryList = new ArrayList<>();
+        categoryList.add(getString(R.string.select_a_category));
+        categoryList.add(getString(R.string.food));
+        categoryList.add(getString(R.string.transport));
+        categoryList.add(getString(R.string.shopping));
+        categoryList.add(getString(R.string.add_category));
+    }
+
+    private void initializeAccountList() {
+        accountList = new ArrayList<>();
+        accountList.add(getString(R.string.select_an_account));
+        accountList.add(getString(R.string.cash));
+        accountList.add(getString(R.string.bank));
+        accountList.add(getString(R.string.add_account));
+    }
+
+    private void initializeViews() {
+        accountSpinner = findViewById(R.id.account_spinner);
+        categorySpinner = findViewById(R.id.category_spinner);
+        editTextAmount = findViewById(R.id.editTextAmount);
+        editTextNote = findViewById(R.id.editTextNote);
+        chooseDayButton = findViewById(R.id.choose_day_button);
+        saveTransactionButton = findViewById(R.id.save_transaction_button);
+        checkBoxIncome = findViewById(R.id.checkBoxIncome);
+        checkBoxExpense = findViewById(R.id.checkBoxExpense);
+    }
+
+    private void loadBalance() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Double tempBalance = snapshot.child("balance").getValue(Double.class);
+                    if (tempBalance != null) {
+                        balance = tempBalance;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, getString(R.string.failed_to_read_value), error.toException());
+            }
+        });
+    }
+
     private void createNotificationChannel() {
         String channelId = "transaction_notifications";
         CharSequence channelName = "Transaction Notifications";
@@ -238,7 +273,7 @@ public class AddTransactionActivity extends AppCompatActivity {
         int notificationId = (int) System.currentTimeMillis();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.tdt_logo)
+                .setSmallIcon(R.drawable.ic_tdt)
                 .setContentTitle(getString(R.string.transaction_saved))
                 .setContentText(temp + "Category: " + category + ", Amount: " + amount)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
@@ -260,7 +295,6 @@ public class AddTransactionActivity extends AppCompatActivity {
         notificationManager.notify(notificationId, builder.build());
     }
 
-
     private void showAddAccountDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add Account");
@@ -278,8 +312,6 @@ public class AddTransactionActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
     }
-
-
 
     private void showAddCategoryDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

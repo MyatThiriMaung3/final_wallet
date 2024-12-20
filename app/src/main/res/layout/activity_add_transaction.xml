@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="@color/darkPurple"
     android:padding="20dp"
-    tools:context=".AddTransactionActivity">
+    tools:context=".activities.AddTransactionActivity">
 
     <!-- "Add Transaction" with Back Icon -->
     <LinearLayout
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:minHeight="48dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/spinner_item_selector"
+        android:background="@drawable/item_spinner_selector"
         android:layout_marginBottom="10dp"
         android:popupBackground="@color/darkPurple"
         android:prompt="@string/account_prompt" />
@@ -72,7 +72,7 @@
         android:inputType="numberDecimal"
         android:padding="8dp"
         android:layout_marginStart="4dp"
-        android:drawableEnd="@drawable/ic_enteramount"/>
+        android:drawableEnd="@drawable/ic_enter_amount"/>
 
     <!-- Divider -->
     <View
@@ -88,7 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
-        android:background="@drawable/spinner_item_selector"
+        android:background="@drawable/item_spinner_selector"
         android:popupBackground="@color/darkPurple"
         android:prompt="@string/category_prompt"
         />
@@ -116,7 +116,7 @@
         android:inputType="textCapSentences"
         android:padding="12dp"
         android:layout_marginStart="4dp"
-        android:drawableEnd="@drawable/ic_addnote"/>
+        android:drawableEnd="@drawable/ic_add_note"/>
 
     <!-- Divider -->
     <View
@@ -219,7 +219,7 @@
         android:padding="16dp"
         android:layout_marginTop="24dp"
         android:layout_gravity="center"
-        android:background="@drawable/button_background"
+        android:background="@drawable/bg_normal_button"
         />
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package tdtu.edu.course.mobiledev.mobileappdevfinalwallet;
+package tdtu.edu.course.mobiledev.mobileappdevfinalwallet.activities;
 
 import static android.content.ContentValues.TAG;
 
@@ -15,9 +15,6 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -43,6 +40,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.R;
+import tdtu.edu.course.mobiledev.mobileappdevfinalwallet.pojos.Transaction;
 
 public class AnalysisActivity extends AppCompatActivity {
     private DatabaseReference reference;
@@ -86,78 +86,63 @@ public class AnalysisActivity extends AppCompatActivity {
 
         reference = FirebaseDatabase.getInstance().getReference("User").child(name);
 
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    Double tempBalance = snapshot.child("balance").getValue(Double.class);
-                    if (tempBalance != null) {
-                        balance = tempBalance;
-                    }
-                }
-            }
+        initializeViews();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.w(TAG, getString(R.string.failed_to_read_value2), error.toException());
-            }
-        });
-
-        txtStandard = findViewById(R.id.txtStandard);
-        txtExpenseSpecific = findViewById(R.id.txtExpenseSpecific);
-        txtTotalExpenses = findViewById(R.id.txtTotalExpenses);
-        txtTotalIncome = findViewById(R.id.txtTotalIncome);
-        txtCurrentBalance = findViewById(R.id.txtCurrentBalance);
-        txtSummary = findViewById(R.id.txtSummary);
-        txtSummarySpecific = findViewById(R.id.txtSummarySpecific);
-        txtTotalSpending = findViewById(R.id.txtTotalSpending);
-        lilo_standard_analysis = findViewById(R.id.lilo_standard_analysis);
-        lilo_specific_analysis = findViewById(R.id.lilo_specific_analysis);
-        bcMonthlyAnalysis = findViewById(R.id.bcMonthlyAnalysis);
-        pcSpecificAnalysis = findViewById(R.id.pcSpecificAnalysis);
-        spinnerMonth = findViewById(R.id.spinnerMonth);
-        spinnerYear = findViewById(R.id.spinnerYear);
-
+        loadBalance();
         loadMonths();
         loadYears();
         loadTransactions();
 
-        // setting the adapter for the spinnerMonth
-        ArrayAdapter<String> monthsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, months);
-        monthsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMonth.setAdapter(monthsAdapter);
+        spinnerMonthSetUp();
+        spinnerYearSetUp();
+        updateIncomeExpense(monthSelected, yearSelected);
 
+        toggleAnalysisSetUp();
+    }
+
+    private void toggleAnalysisSetUp() {
+        txtStandard.setSelected(true);
+
+        txtExpenseSpecific.setOnClickListener(v -> {
+            txtExpenseSpecific.setSelected(true);
+            txtStandard.setSelected(false);
+
+            lilo_specific_analysis.setVisibility(View.VISIBLE);
+            lilo_standard_analysis.setVisibility(View.GONE);
+
+        });
+
+        txtStandard.setOnClickListener(v -> {
+            txtStandard.setSelected(true);
+            txtExpenseSpecific.setSelected(false);
+
+            lilo_standard_analysis.setVisibility(View.VISIBLE);
+            lilo_specific_analysis.setVisibility(View.GONE);
+        });
+    }
+
+    private void spinnerMonthSetUp() {
+        setSpinnerMonthAdapter();
 
         // default selected month for the spinner (january)
         spinnerMonth.setSelection(0);
         monthSelected = 1;
 
+        spinnerMonthEventHandler();
+    }
 
-        spinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                monthSelected = position + 1;
-                standardAnalysisFormatter();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-
-        // for the spinnerYear
-        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
-        yearsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerYear.setAdapter(yearsAdapter);
+    private void spinnerYearSetUp() {
+        setSpinnerYearAdapter();
 
         // setting the default spinner selections to 2024
         spinnerYear.setSelection(0);
         yearSelected = 2024;
 
 
+        spinnerYearEventHandler();
+    }
+
+    private void spinnerYearEventHandler() {
         spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -181,30 +166,70 @@ public class AnalysisActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-        updateIncomeExpense(monthSelected, yearSelected);
+    private void setSpinnerYearAdapter() {
+        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
+        yearsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerYear.setAdapter(yearsAdapter);
+    }
 
+    private void setSpinnerMonthAdapter() {
+        ArrayAdapter<String> monthsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, months);
+        monthsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMonth.setAdapter(monthsAdapter);
+    }
 
+    private void spinnerMonthEventHandler() {
+        spinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                monthSelected = position + 1;
+                standardAnalysisFormatter();
 
-        txtStandard.setSelected(true);
+            }
 
-        txtExpenseSpecific.setOnClickListener(v -> {
-            txtExpenseSpecific.setSelected(true);
-            txtStandard.setSelected(false);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-            lilo_specific_analysis.setVisibility(View.VISIBLE);
-            lilo_standard_analysis.setVisibility(View.GONE);
-
+            }
         });
+    }
 
-        txtStandard.setOnClickListener(v -> {
-            txtStandard.setSelected(true);
-            txtExpenseSpecific.setSelected(false);
+    private void initializeViews() {
+        txtStandard = findViewById(R.id.txtStandard);
+        txtExpenseSpecific = findViewById(R.id.txtExpenseSpecific);
+        txtTotalExpenses = findViewById(R.id.txtTotalExpenses);
+        txtTotalIncome = findViewById(R.id.txtTotalIncome);
+        txtCurrentBalance = findViewById(R.id.txtCurrentBalance);
+        txtSummary = findViewById(R.id.txtSummary);
+        txtSummarySpecific = findViewById(R.id.txtSummarySpecific);
+        txtTotalSpending = findViewById(R.id.txtTotalSpending);
+        lilo_standard_analysis = findViewById(R.id.lilo_standard_analysis);
+        lilo_specific_analysis = findViewById(R.id.lilo_specific_analysis);
+        bcMonthlyAnalysis = findViewById(R.id.bcMonthlyAnalysis);
+        pcSpecificAnalysis = findViewById(R.id.pcSpecificAnalysis);
+        spinnerMonth = findViewById(R.id.spinnerMonth);
+        spinnerYear = findViewById(R.id.spinnerYear);
+    }
 
-            lilo_standard_analysis.setVisibility(View.VISIBLE);
-            lilo_specific_analysis.setVisibility(View.GONE);
+    private void loadBalance() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Double tempBalance = snapshot.child("balance").getValue(Double.class);
+                    if (tempBalance != null) {
+                        balance = tempBalance;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, getString(R.string.failed_to_read_value2), error.toException());
+            }
         });
-
     }
 
     private void standardAnalysisFormatter() {
@@ -281,7 +306,6 @@ public class AnalysisActivity extends AppCompatActivity {
         }
 
     }
-
 
     private List<Integer> generateColors(int count) {
         List<Integer> colors = new ArrayList<>();

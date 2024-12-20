@@ -11,7 +11,7 @@
     android:paddingRight="20dp"
     android:paddingLeft="20dp"
     android:background="@color/darkPurple"
-    tools:context=".CalculatorActivity">
+    tools:context=".activities.CalculatorActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

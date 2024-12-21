@@ -29,12 +29,6 @@
             android:title="@string/news"/>
 
         <item
-            android:id="@+id/nav_theme"
-            android:icon="@drawable/ic_theme"
-            android:title="@string/theme"
-            />
-
-        <item
             android:id="@+id/nav_language"
             android:icon="@drawable/ic_translate"
             android:title="@string/language"
@@ -56,12 +50,6 @@
             </menu>
 
         </item>
-
-        <item
-            android:id="@+id/nav_updates"
-            android:icon="@drawable/ic_system_update"
-            android:title="@string/updates"
-            />
 
         <item
             android:id="@+id/nav_logout"

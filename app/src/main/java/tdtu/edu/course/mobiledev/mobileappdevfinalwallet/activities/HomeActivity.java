@@ -160,9 +160,7 @@ public class HomeActivity extends AppCompatActivity {
                     setLocale("my", true);
                 } else if (title.equals(getString(R.string.vietnamese))) {
                     setLocale("vi", true);
-                } else if (title.equals(getString(R.string.updates))) {
-                    Toast.makeText(HomeActivity.this, "Updates clicked", Toast.LENGTH_SHORT).show();
-                } else if (title.equals(getString(R.string.logout))) {
+                }  else if (title.equals(getString(R.string.logout))) {
                     logout();
                 }
 
@@ -493,4 +491,9 @@ public class HomeActivity extends AppCompatActivity {
         return getResources().getConfiguration().getLocales().get(0).getLanguage();
     }
 
+    public void showMaps(View view) {
+        Intent intentMaps = new Intent(this, MapActivity.class);
+        intentMaps.putExtra("name", name);
+        startActivity(intentMaps);
+    }
 }

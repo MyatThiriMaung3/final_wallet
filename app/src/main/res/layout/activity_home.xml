@@ -450,6 +450,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:onClick="showMaps"
                     >
 
                     <ImageView

@@ -39,6 +39,3 @@ Run this command in your terminal.
 4. **Run the App**
 - Select an Emulator or Physical Device
 - Run in Android Studio
-
-## License
-This project is licensed under the MIT license. See [LICENSE](https://github.com/MyatThiriMaung3/task-management-web-app/blob/main/LICENSE) for more information.
